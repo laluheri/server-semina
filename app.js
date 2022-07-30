@@ -3,8 +3,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+
+// konfigutasi middlewares
+const notFoundMiddleware = require('./app/middlewares/not-found');
+const handlerErrorMiddleware = require('./app/middlewares/handler-error');
+
 // Konfigurasi router
 const userRouter = require('./app/api/v1/users/router');
+const authRouter = require('./app/api/v1/auth/router');
+const categoriesRouter = require('./app/api/v1/categories/router');
 
 const app = express();
 
@@ -21,5 +28,9 @@ app.get('/', (req, res)=>{
 });
 
 app.use(`${versionv1}`,userRouter);
+app.use(`${versionv1}/auth`,authRouter);
+app.use(`${versionv1}/categories`,categoriesRouter);
 
+app.use(notFoundMiddleware);
+app.use(handlerErrorMiddleware);
 module.exports = app;
